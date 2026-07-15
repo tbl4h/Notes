@@ -1,0 +1,30 @@
+GNU ld 2.16.X (Linker): Generuje mnóstwo fałszywych, długich ostrzeżeń o symbolach .gnu.linkonce.t.*. Tekst uspokaja, że można je zignorować, bo sam program połączy się poprawnie, a problem znika od wersji 2.17.
+
+GNU binutils 2.17: Posiada błąd, który drastycznie wydłuża czas linkowania (zamiast kilku sekund trwa to wiele minut). Zalecana jest aktualizacja.
+
+GNU Binutils 2.19.1 Gold (Alternatywny linker): Posiada błąd, który losowo przerywa kompilację LLVM z błędem o "zależnościach cyklicznych" (cyclic dependencies), jeśli budujesz kod z włączoną flagą PIC (Position Independent Code). Zalecana jest aktualizacja.
+
+cmake \
+    -S /data/Repositories/llvm-project/llvm \
+    -B /data/Build/llvm-stage2 \
+    -G Ninja \
+    -DCMAKE_C_COMPILER=/opt/llvm-stage1/bin/clang \
+    -DCMAKE_CXX_COMPILER=/opt/llvm-stage1/bin/clang++ \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/opt/llvm \
+    -DLLVM_USE_LINKER=lld \
+    -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;lld;lldb;polly" \
+    -DLLVM_ENABLE_RUNTIMES="compiler-rt;libcxx;libcxxabi;libunwind" \
+    -DLLVM_TARGETS_TO_BUILD="X86" \
+    -DLLVM_ENABLE_ASSERTIONS=OFF \
+    -DLLVM_ENABLE_RTTI=ON \
+    -DLLVM_ENABLE_EH=ON \
+    -DLLVM_ENABLE_LTO=Thin \
+    -DLLVM_INSTALL_UTILS=ON \
+    -DLLVM_INCLUDE_TESTS=OFF \
+    -DLLVM_INCLUDE_BENCHMARKS=OFF \
+    -DLLVM_INCLUDE_EXAMPLES=OFF \
+    -DLLVM_PARALLEL_COMPILE_JOBS=24 \
+    -DLLVM_PARALLEL_LINK_JOBS=4 \
+    -DLLVM_PARALLEL_TABLEGEN_JOBS=24
+
